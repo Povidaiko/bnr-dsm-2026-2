@@ -1,97 +1,82 @@
 package br.edu.fatecfranca.api.models;
 
-
 import java.util.List;
-
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Document(collection = "cursos")
 public class Curso {
 
+    @Id 
+    private String id;
 
-   @Id
-   private String id;
+    @NotBlank(message = "O nome da turma é obrigatório.")
+    private String nome;
 
+    @NotBlank(message = "O nome da turma é obrigatório.")
+    private String cargaHoraria;
 
-   private String nome;
-   private String cargaHoraria;
-   private String valor;
+    @NotNull(message = "O valor do cursó é obrigatório")
+    @Positive(message = "O número de vagas deve ser maior que zero.")
+    private Double valor;
 
+    private List<Modulo> modulos;
 
-   private List<Modulo> modulos;
+    public Curso(
+            String id,
+            String nome,
+            String cargaHoraria,
+            Double valor,
+            List<Modulo> modulos) {
+        this.id = id;
+        this.nome = nome;
+        this.cargaHoraria = cargaHoraria;
+        this.valor = valor;
+        this.modulos = modulos;
+    }
 
+    public String getId() {
+        return id;
+    }
 
-   // Construtor genérico
-   public Curso() {
-   }
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public String getNome() {
+        return nome;
+    }
 
-   // Construtor personalizado completo, com todos os atributos
-   public Curso(
-           String id,
-           String nome,
-           String cargaHoraria,
-           String valor,
-           List<Modulo> modulos) {
-       this.id = id;
-       this.nome = nome;
-       this.cargaHoraria = cargaHoraria;
-       this.valor = valor;
-       this.modulos = modulos;
-   }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
+    public String getCargaHoraria() {
+        return cargaHoraria;
+    }
 
-   public String getId() {
-    return id;
-   }
+    public void setCargaHoraria(String cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
+    }
 
+    public Double getValor() {
+        return valor;
+    }
 
-   public void setId(String id) {
-    this.id = id;
-   }
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 
+    public List<Modulo> getModulos() {
+        return modulos;
+    }
 
-   public String getNome() {
-    return nome;
-   }
-
-
-   public void setNome(String nome) {
-    this.nome = nome;
-   }
-
-
-   public String getCargaHoraria() {
-    return cargaHoraria;
-   }
-
-
-   public void setCargaHoraria(String cargaHoraria) {
-    this.cargaHoraria = cargaHoraria;
-   }
-
-
-   public String getValor() {
-    return valor;
-   }
-
-
-   public void setValor(String valor) {
-    this.valor = valor;
-   }
-
-
-   public List<Modulo> getModulos() {
-    return modulos;
-   }
-
-
-   public void setModulos(List<Modulo> modulos) {
-    this.modulos = modulos;
-   }
-
-   //*
+    public void setModulos(List<Modulo> modulos) {
+        this.modulos = modulos;
+    }
 }

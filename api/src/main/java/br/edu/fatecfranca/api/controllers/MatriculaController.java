@@ -1,8 +1,7 @@
+
 package br.edu.fatecfranca.api.controllers;
 
-
 import java.util.List;
-
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,90 +14,85 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import br.edu.fatecfranca.api.dtos.MatriculaResponse;
 import br.edu.fatecfranca.api.models.Matricula;
 import br.edu.fatecfranca.api.services.MatriculaService;
-
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/matriculas")
 public class MatriculaController {
 
+    private final MatriculaService service;
 
-   private final MatriculaService service;
+    public MatriculaController(MatriculaService service) {
+        this.service = service;
+    }
 
+    @GetMapping
+    public List<MatriculaResponse> listarTodos() {
+        return service.listarComDetalhes();
+    }
 
-   public MatriculaController(MatriculaService service) {
-       this.service = service;
-   }
+    @GetMapping("/{id}")
+    public ResponseEntity<MatriculaResponse> buscarPorId(@PathVariable String id) {
+        return service.buscarComDetalhes(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
+    @GetMapping("/turma/{turmaId}")
+    public List<MatriculaResponse> listarPorTurma(
+        @PathVariable String turmaId) {
 
-   @GetMapping
-   public List<Matricula> listarTodos() {
-       return service.listarTodos();
-   }
+        return service.listarPorTurmaComDetalhes(turmaId);        
+    }
 
+    @GetMapping("/aluno/{alunoId}")
+    public List<MatriculaResponse> listarPorAluno(
+        @PathVariable String alunoId) {
 
-   @GetMapping("/aluno/{alunoId}")
-   public List<Matricula> listarPorAluno(
-           @PathVariable String alunoId) {
+        return service.listarPorAlunoComDetalhes(alunoId);
+    }
+    
+    @PostMapping
+    public ResponseEntity<Matricula> criar(
+            @Valid 
+            @RequestBody Matricula matricula) {
 
+        Matricula matriculaSalvo = service.salvar(matricula);
 
-       return service.listarPorAluno(alunoId);
-   }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(matriculaSalvo);
+    }
 
-   @GetMapping("/turma/{turmaId}")
-    public List<Matricula> listarPorTurma( 
-            @PathVariable String turmaId) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Matricula> atualizar(
+            @Valid
+            @PathVariable String id,
+            @RequestBody Matricula matricula) {
 
-        return service.listarPorTurma(turmaId);
-   }
+        if (service.buscarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
+        matricula.setId(id);
 
-   @PostMapping
-   public ResponseEntity<Matricula> criar(@RequestBody Matricula matricula) {
-       Matricula matriculaSalvo = service.salvar(matricula);
+        Matricula matriculaAtualizado = service.salvar(matricula);
 
+        return ResponseEntity.ok(matriculaAtualizado);
+    }
 
-       return ResponseEntity
-               .status(HttpStatus.CREATED)
-               .body(matriculaSalvo);
-   }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable String id) {
 
+        if (service.buscarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
-   @PutMapping("/{id}")
-   public ResponseEntity<Matricula> atualizar(
-           @PathVariable String id,
-           @RequestBody Matricula matricula) {
+        service.excluir(id);
 
-
-       if (service.buscarPorId(id).isEmpty()) {
-           return ResponseEntity.notFound().build();
-       }
-
-
-       matricula.setId(id);
-
-
-       Matricula matriculaAtualizado = service.salvar(matricula);
-
-
-       return ResponseEntity.ok(matriculaAtualizado);
-   }
-
-
-   @DeleteMapping("/{id}")
-   public ResponseEntity<Void> excluir(@PathVariable String id) {
- 
-
-       if (service.buscarPorId(id).isEmpty()) {
-           return ResponseEntity.notFound().build();
-       }
-
-
-       service.excluir(id);
-
-
-       return ResponseEntity.noContent().build();
-   }
+        return ResponseEntity.noContent().build();
+    }
 }

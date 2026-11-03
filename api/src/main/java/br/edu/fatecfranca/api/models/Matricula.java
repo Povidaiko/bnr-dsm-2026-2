@@ -1,108 +1,84 @@
 package br.edu.fatecfranca.api.models;
 
-
 import java.util.List;
-
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Document(collection = "matriculas")
 public class Matricula {
 
+    @Id 
+    private String id;
+    private String alunoId;
+    private String turmaId;
 
-   @Id
-   private String id;
+    @NotBlank(message = "O status é obrigatório.")
+    @Pattern(
+        regexp = "ABERTA | FECHADA",
+        message = "O status deve ser ABERTO ou FECHADA"
+    )
+    private String status;
 
-   private String alunoId;
-   private String turmaId;
-   private String data;
-   private String status;
+    private List<Nota> notas;
 
-   private List<Nota> notas;
+    public Matricula() {
+    }
 
+    public Matricula(
+            String id, 
+            String alunoId, 
+            String turmaId, 
+            String status,
+            List<Nota> notas) {
+        this.id = id;
+        this.alunoId = alunoId;
+        this.turmaId = turmaId;
+        this.status = status;
+        this.notas = notas;
+    }
 
-   public Matricula() {
-   }
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   public Matricula(
-           String id,
-           String alunoId,
-           String turmaId,
-           String data,
-           String status,
-           List<Nota> notas) {
-       this.id = id;
-       this.alunoId = alunoId;
-       this.turmaId = turmaId;
-       this.data = data;
-       this.status = status;
-       this.notas = notas;
-   }
+    public String getAlunoId() {
+        return alunoId;
+    }
 
+    public void setAlunoId(String alunoId) {
+        this.alunoId = alunoId;
+    }
 
-   public String getId() {
-    return id;
-   }
+    public String getTurmaId() {
+        return turmaId;
+    }
 
+    public void setTurmaId(String turmaId) {
+        this.turmaId = turmaId;
+    }
 
-   public void setId(String id) {
-    this.id = id;
-   }
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-   public String getAlunoId() {
-    return alunoId;
-   }
+    public List<Nota> getNotas() {
+        return notas;
+    }
 
+    public void setNotas(List<Nota> notas) {
+        this.notas = notas;
+    }
 
-   public void setAlunoId(String alunoId) {
-    this.alunoId = alunoId;
-   }
-
-
-   public String getTurmaId() {
-    return turmaId;
-   }
-
-
-   public void setTurmaId(String turmaId) {
-    this.turmaId = turmaId;
-   }
-
-
-   public String getStatus() {
-    return status;
-   }
-
-
-   public void setStatus(String status) {
-    this.status = status;
-   }
-
-
-   public List<Nota> getNotas() {
-    return notas;
-   }
-
-
-   public void setNotas(List<Nota> notas) {
-    this.notas = notas;
-   }
-
-
-   public String getData() {
-    return data;
-   }
-
-
-   public void setData(String data) {
-    this.data = data;
-   }
-   
-
-
-   //*
 }
