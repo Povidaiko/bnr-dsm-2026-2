@@ -62,7 +62,7 @@ public class TurmaService {
                turma.getId(),
                turma.getCursoId(),
                turma.getInstrutorId(),
-               turma.getDataFim(),
+               turma.getDataInicio(),
                turma.getDataFim(),
                turma.getNumVagas(),
                turma.getHorario(),
@@ -114,7 +114,7 @@ public class TurmaService {
         if (!instrutorRepository.existsById(instrutorId)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Istrutor não encontrado");
+                    "Instrutor não encontrado");
         }
    }
 
